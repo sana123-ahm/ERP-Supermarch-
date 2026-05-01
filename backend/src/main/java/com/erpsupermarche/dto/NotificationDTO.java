@@ -18,5 +18,5 @@ public class NotificationDTO {
     private UserRole targetRole;
     private String message;
     private LocalDateTime createdAt;
-    private boolean isRead;
+    private boolean read;
 }

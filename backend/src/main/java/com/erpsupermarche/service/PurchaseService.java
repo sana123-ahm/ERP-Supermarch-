@@ -122,6 +122,18 @@ public class PurchaseService {
         return convertToDTO(purchase);
     }
 
+    @jakarta.transaction.Transactional
+    public void deletePurchase(String id) {
+        Purchase purchase = purchaseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Purchase not found"));
+        
+        if (purchase.getStatus() == PurchaseStatus.RECEIVED || purchase.getStatus() == PurchaseStatus.DELIVERED) {
+            throw new RuntimeException("Cannot delete a received purchase. Please cancel it instead to maintain stock integrity.");
+        }
+        
+        purchaseRepository.delete(purchase);
+    }
+
     private PurchaseDTO convertToDTO(Purchase purchase) {
             List<PurchaseItemDTO> items = purchaseItemRepository.findByPurchaseIdOrderByIdAsc(purchase.getId()).stream()
                                 .map(item -> PurchaseItemDTO.builder()

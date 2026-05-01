@@ -43,6 +43,13 @@ public class PurchaseController {
     public ResponseEntity<PurchaseDTO> updatePurchaseStatus(@PathVariable String id, @RequestBody StatusUpdateRequest request) {
         return ResponseEntity.ok(purchaseService.updatePurchaseStatus(id, request.getStatus()));
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ResponseEntity<Void> deletePurchase(@PathVariable String id) {
+        purchaseService.deletePurchase(id);
+        return ResponseEntity.noContent().build();
+    }
 }
 
 class StatusUpdateRequest {

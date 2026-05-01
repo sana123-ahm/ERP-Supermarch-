@@ -223,3 +223,32 @@ INSERT INTO users (id, email, password, name, role, phone_number, active) VALUES
 ('3', 'caissier@supermarche.com', '$2a$10$SlVZmhKmSSZvUI0WvpDpLOYkJ8X8n5Z8K9Z9Z9Z9Z9Z9Z9Z9Z9Z9', 'Marie Caissière', 'CAISSIER', '555-0003', TRUE),
 ('4', 'magasinier@supermarche.com', '$2a$10$SlVZmhKmSSZvUI0WvpDpLOYkJ8X8n5Z8K9Z9Z9Z9Z9Z9Z9Z9Z9Z9', 'Pierre Magasinier', 'MAGASINIER', '555-0004', TRUE),
 ('5', 'rh@supermarche.com', '$2a$10$SlVZmhKmSSZvUI0WvpDpLOYkJ8X8n5Z8K9Z9Z9Z9Z9Z9Z9Z9Z9Z9', 'Sophie RH', 'RH', '555-0005', TRUE);
+
+-- Stock Movements Table
+CREATE TABLE stock_movements (
+    id VARCHAR(36) PRIMARY KEY,
+    product_id VARCHAR(36) NOT NULL,
+    quantity INT NOT NULL,
+    type ENUM('IN', 'OUT', 'INVENTORY') NOT NULL,
+    reason VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id VARCHAR(36),
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    INDEX idx_product_id (product_id),
+    INDEX idx_created_at (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Notifications Table
+CREATE TABLE notifications (
+    id VARCHAR(36) PRIMARY KEY,
+    sender_name VARCHAR(255),
+    sender_role ENUM('ADMIN', 'MANAGER', 'CAISSIER', 'MAGASINIER', 'RH'),
+    target_role ENUM('ADMIN', 'MANAGER', 'CAISSIER', 'MAGASINIER', 'RH') NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_read BOOLEAN DEFAULT FALSE,
+    INDEX idx_target_role (target_role),
+    INDEX idx_sender_role (sender_role)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+

@@ -31,11 +31,12 @@ public class Notification {
 
     private LocalDateTime createdAt;
     
-    private boolean isRead;
+    @Column(name = "is_read")
+    private boolean read;
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        isRead = false;
+        read = false;
     }
 }
