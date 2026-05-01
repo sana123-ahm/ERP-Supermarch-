@@ -6,7 +6,7 @@ import { Label } from "../components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
 import { Badge } from "../components/ui/badge";
-import { Plus, Search, FileText, Check, X, Package, Loader2 } from "lucide-react";
+import { Plus, Search, FileText, Check, X, Package, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import {
@@ -212,6 +212,17 @@ export function PurchasesPage() {
     } catch (error) {
       console.error("Error cancelling order:", error);
       toast.error("Erreur lors de l'annulation de la commande");
+    }
+  };
+
+  const deleteOrder = async (id: string) => {
+    try {
+      await purchasesApi.delete(id);
+      setOrders(orders.filter((o) => o.id !== id));
+      toast.success("Commande supprimée avec succès");
+    } catch (error: any) {
+      console.error("Error deleting order:", error);
+      toast.error(error.message || "Erreur lors de la suppression de la commande");
     }
   };
 
@@ -555,7 +566,7 @@ export function PurchasesPage() {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="text-red-600 hover:bg-red-50"
+                            className="text-orange-600 hover:bg-orange-50"
                           >
                             <X className="w-4 h-4 mr-2" />
                             Annuler
@@ -565,16 +576,81 @@ export function PurchasesPage() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>Annuler la commande</AlertDialogTitle>
                             <AlertDialogDescription>
-                              Êtes-vous sûr de vouloir annuler la commande {order.orderNumber} ?
+                              Voulez-vous vraiment annuler la commande {order.orderNumber} ? Elle restera dans l'historique comme annulée.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Retour</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() => cancelOrder(order.id)}
+                              className="bg-orange-600 hover:bg-orange-700 text-white"
+                            >
+                              Confirmer l'annulation
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="bg-red-600 hover:bg-red-700 shadow-sm"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Supprimer
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Supprimer la commande</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Voulez-vous vraiment supprimer définitivement cette commande ? Cette action est irréversible.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => deleteOrder(order.id)}
                               className="bg-red-600 hover:bg-red-700"
                             >
-                              Annuler la commande
+                              Supprimer définitivement
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  )}
+                  
+                  {order.status !== "pending" && (
+                    <div className="flex justify-end">
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-400 hover:text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Supprimer
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Supprimer la commande</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Voulez-vous vraiment supprimer définitivement cette commande ? 
+                              {order.status === "received" ? " Attention : cela ne modifiera pas le stock déjà reçu." : ""}
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => deleteOrder(order.id)}
+                              className="bg-red-600 hover:bg-red-700"
+                            >
+                              Supprimer définitivement
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
