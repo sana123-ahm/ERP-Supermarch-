@@ -12,6 +12,7 @@ import { EmployeesPage } from "./pages/EmployeesPage";
 import { LeavesPage } from "./pages/LeavesPage";
 import { TimesheetPage } from "./pages/TimesheetPage";
 import { ReportsPage } from "./pages/ReportsPage";
+import NotificationsPage from "./pages/NotificationsPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
 export const router = createBrowserRouter([
@@ -37,6 +38,7 @@ export const router = createBrowserRouter([
       { path: "conges", Component: LeavesPage },
       { path: "pointage", Component: TimesheetPage },
       { path: "rapports", Component: ReportsPage },
+      { path: "messages", Component: NotificationsPage },
       { path: "*", Component: NotFoundPage },
     ],
   },

@@ -15,6 +15,8 @@ import {
   LogOut,
   Menu,
   X,
+  MessageSquare,
+  Bell,
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
@@ -50,6 +52,7 @@ const navigation = [
   { name: "Congés", href: "/conges", icon: Calendar, roles: ["ADMIN", "RH", "MANAGER"] },
   { name: "Pointage", href: "/pointage", icon: Clock, roles: ["ADMIN", "RH"] },
   { name: "Rapports", href: "/rapports", icon: BarChart3, roles: ["ADMIN", "MANAGER"] },
+  { name: "Messages", href: "/messages", icon: MessageSquare, roles: ["ADMIN", "MANAGER", "CAISSIER", "RH", "MAGASINIER"] },
 ];
 
 export function Layout() {
@@ -177,6 +180,10 @@ export function Layout() {
               <Menu className="w-5 h-5" />
             </Button>
             <div className="flex items-center gap-4">
+              <Link to="/messages" className="relative p-2 text-slate-500 hover:text-blue-600 transition-colors">
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+              </Link>
               <div className="text-sm text-slate-600">
                 {new Date().toLocaleDateString("fr-FR", {
                   weekday: "long",

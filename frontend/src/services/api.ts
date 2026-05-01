@@ -301,3 +301,25 @@ export const reportsApi = {
 
   getAnalytics: () => apiCall<any>("/reports/analytics"),
 };
+
+// Notifications API
+export const notificationsApi = {
+  getByRole: (role: string) => apiCall<any[]>(`/notifications/role/${role}`),
+  
+  send: (data: { senderName: string; senderRole: string; targetRole: string; message: string }) =>
+    apiCall<any>("/notifications", {
+      method: "POST",
+      body: data,
+    }),
+
+  markRead: (id: string) =>
+    apiCall<void>(`/notifications/${id}/read`, {
+      method: "PATCH",
+    }),
+
+  markAllRead: (senderRole: string, targetRole: string) =>
+    apiCall<void>(`/notifications/read-all/${senderRole}/${targetRole}`, {
+      method: "PATCH",
+    }),
+};
+
