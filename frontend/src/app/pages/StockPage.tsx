@@ -151,9 +151,10 @@ export function StockPage() {
       setDialogOpen(false);
       resetForm();
       loadMovements();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving movement:", error);
-      toast.error("Erreur lors de l'enregistrement du mouvement");
+      const errorMessage = error.response?.data?.message || error.message || "Erreur lors de l'enregistrement du mouvement";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
