@@ -15,6 +15,7 @@ public class NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @org.springframework.transaction.annotation.Transactional
     public NotificationDTO sendNotification(NotificationDTO dto) {
         Notification notification = Notification.builder()
                 .senderName(dto.getSenderName())
@@ -34,6 +35,7 @@ public class NotificationService {
                 .collect(Collectors.toList());
     }
 
+    @org.springframework.transaction.annotation.Transactional
     public void markAsRead(String id) {
         notificationRepository.findById(id).ifPresent(n -> {
             n.setRead(true);
@@ -41,9 +43,11 @@ public class NotificationService {
         });
     }
 
+    @org.springframework.transaction.annotation.Transactional
     public void markAllAsReadForRole(UserRole senderRole, UserRole targetRole) {
-        List<Notification> unread = notificationRepository.findBySenderRoleOrTargetRoleOrderByCreatedAtDesc(senderRole, targetRole)
-                .stream()
+        List<Notification> notifications = notificationRepository.findBySenderRoleOrTargetRoleOrderByCreatedAtDesc(senderRole, targetRole);
+        
+        List<Notification> unread = notifications.stream()
                 .filter(n -> n.getSenderRole() == senderRole && n.getTargetRole() == targetRole && !n.isRead())
                 .collect(Collectors.toList());
         
@@ -59,7 +63,7 @@ public class NotificationService {
                 .targetRole(n.getTargetRole())
                 .message(n.getMessage())
                 .createdAt(n.getCreatedAt())
-                .isRead(n.isRead())
+                .read(n.isRead())
                 .build();
     }
 }

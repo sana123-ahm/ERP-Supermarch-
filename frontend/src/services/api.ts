@@ -170,6 +170,11 @@ export const purchasesApi = {
       method: "PATCH",
       body: { status },
     }),
+
+  delete: (id: string) =>
+    apiCall<void>(`/purchases/${id}`, {
+      method: "DELETE",
+    }),
 };
 
 // Sales API

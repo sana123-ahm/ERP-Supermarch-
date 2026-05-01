@@ -2,8 +2,6 @@
 node_modules/
 dist/
 build/
-.env
-.env.local
 .env.development.local
 .env.test.local
 .env.production.local
@@ -24,7 +22,6 @@ logs/
 
 # IDEs
 .idea/
-.vscode/
 *.swp
 *.swo
 .DS_Store
@@ -33,3 +30,4 @@ logs/
 *.txt
 *.bak
 *.tmp
+config.bat

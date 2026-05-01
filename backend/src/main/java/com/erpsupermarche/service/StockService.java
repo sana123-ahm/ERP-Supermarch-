@@ -133,8 +133,9 @@ public class StockService {
         StockMovement movement = StockMovement.builder()
                 .product(product)
                 .quantity(quantity)
-                .type(type)
-                .reason(reason)
+                .type(type != null ? type.toUpperCase() : "UNKNOWN")
+                .reason(reason != null ? reason : "Aucune raison fournie")
+                .createdAt(LocalDateTime.now())
                 .build();
         stockMovementRepository.save(movement);
     }
@@ -160,8 +161,9 @@ public class StockService {
         StockMovement movement = StockMovement.builder()
                 .product(product)
                 .quantity(dto.getQuantity())
-                .type(dto.getType().toUpperCase())
-                .reason(dto.getReason())
+                .type(dto.getType() != null ? dto.getType().toUpperCase() : "IN")
+                .reason(dto.getReason() != null ? dto.getReason() : "Ajustement de stock")
+                .createdAt(LocalDateTime.now())
                 .build();
         
         stockMovementRepository.save(movement);
